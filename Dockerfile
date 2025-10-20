@@ -20,14 +20,29 @@ RUN corepack enable pnpm && pnpm i;
 # Stage 2: Building the application
 # This stage builds the Next.js application
 FROM base AS builder
+
+# Accept build arguments from Railway
+ARG SERPER_API_KEY
+ARG GOOGLE_GENERATIVE_AI_API_KEY
+ARG FIRECRAWL_API_KEY
+ARG DATABASE_URL
+ARG REDIS_URL
+ARG BETTER_AUTH_SECRET
+
+# Set environment variables from build args
+ENV SERPER_API_KEY=$SERPER_API_KEY
+ENV GOOGLE_GENERATIVE_AI_API_KEY=$GOOGLE_GENERATIVE_AI_API_KEY
+ENV FIRECRAWL_API_KEY=$FIRECRAWL_API_KEY
+ENV DATABASE_URL=$DATABASE_URL
+ENV REDIS_URL=$REDIS_URL
+ENV BETTER_AUTH_SECRET=$BETTER_AUTH_SECRET
+
 WORKDIR /app
 # Copy node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 # Copy all source files
 COPY . .
-# Note: Environment variables are provided by Railway at build time
-# No need to copy .env file - Railway injects env vars automatically
-# Build the Next.js application
+# Build the Next.js application with environment variables available
 RUN npm run build
 
 # Stage 3: Production runtime
