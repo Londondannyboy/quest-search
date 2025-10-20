@@ -25,8 +25,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 # Copy all source files
 COPY . .
-# Copy environment variables for build configuration
-COPY .env .env
+# Note: Environment variables are provided by Railway at build time
+# No need to copy .env file - Railway injects env vars automatically
 # Build the Next.js application
 RUN npm run build
 
