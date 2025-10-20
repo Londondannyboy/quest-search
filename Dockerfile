@@ -43,6 +43,8 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copy all source files
 COPY . .
 # Build the Next.js application with environment variables available
+# Skip database validation during build
+ENV SKIP_ENV_VALIDATION=1
 RUN npm run build
 
 # Stage 3: Production runtime
